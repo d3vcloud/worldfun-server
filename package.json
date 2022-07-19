@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
-    "start": "tsnd --respawn src/index.ts",
+    "dev": "tsnd --respawn src/index.ts",
     "prettier:check": "npx prettier . --check",
     "prettier:fix": "npx prettier . --write"
   },
