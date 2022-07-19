@@ -12,7 +12,7 @@
     /* Type Checking */
     "strict": true,
     "skipLibCheck": true,
-    // "baseUrl": "."
+    "baseUrl": "."
   },
   "exclude": ["dist","node_modules"],
   "include": ["src"]
