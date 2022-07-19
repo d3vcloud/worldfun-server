@@ -1,3 +1,5 @@
-import { sum } from './sum'
+import ServerRealtime from './config/server'
 
-console.log(sum(1, 2))
+const server = new ServerRealtime()
+
+server.listen()
