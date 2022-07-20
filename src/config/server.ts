@@ -2,6 +2,7 @@ import express, { Application } from 'express'
 import cors from 'cors'
 import { createServer, Server } from 'http'
 import { Server as SocketServer, Socket } from 'socket.io'
+import { CLIENT_URL } from './constants'
 
 class ServerRealtime {
   private app: Application
@@ -13,7 +14,11 @@ class ServerRealtime {
     this.app = express()
     this.port = '4000'
     this.server = createServer(this.app)
-    this.io = new SocketServer(this.server)
+    this.io = new SocketServer(this.server, {
+      cors: {
+        origin: CLIENT_URL
+      }
+    })
     // Middlewares
     this.middlewares()
     // Start connection with socket
