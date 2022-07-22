@@ -39,12 +39,10 @@ class ServerRealtime {
         socket.join(room)
         if (this.rooms[room]) {
           // Just notify the upcoming participant
-          console.log('Should send an array with other participants')
           socket.emit('connected-users', this.rooms[room].participants)
           this.rooms[room].participants.push(user)
         } else {
           // Just notify the upcoming participant
-          console.log('Should send an empty array')
           socket.emit('connected-users', [])
           this.rooms[room] = { participants: [user] }
         }
