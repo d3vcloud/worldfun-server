@@ -34,20 +34,33 @@ class ServerRealtime {
 
   getConnection() {
     this.io.on('connection', (socket: Socket) => {
-      socket.on('join', (payload) => {
-        const { room, user } = payload
-        socket.join(room)
-        if (this.rooms[room]) {
-          // Just notify the upcoming participant
-          socket.emit('connected-users', this.rooms[room].participants)
-          this.rooms[room].participants.push(user)
-        } else {
-          // Just notify the upcoming participant
-          socket.emit('connected-users', [])
-          this.rooms[room] = { participants: [user] }
-        }
-        // Notify all participants less the upcoming participant
-        socket.broadcast.to(room).emit('new-user', user)
+      const dataFromClient = socket.handshake.headers['x-data']
+
+      if (!dataFromClient) {
+        return socket.disconnect()
+      }
+
+      const { user, room } = JSON.parse(dataFromClient as any)
+      socket.join(room)
+      if (this.rooms[room]) {
+        // Just notify the upcoming participant
+        socket.emit('connected-users', this.rooms[room].participants)
+        this.rooms[room].participants.push(user)
+      } else {
+        // Just notify the upcoming participant
+        socket.emit('connected-users', [])
+        this.rooms[room] = { participants: [user] }
+      }
+      // Notify all participants less the upcoming participant
+      socket.broadcast.to(room).emit('new-user', user)
+
+      socket.on('disconnect', () => {
+        const { userId } = user
+
+        const newParticipants = this.rooms[room].participants.filter((par) => par.userId !== userId)
+        this.rooms[room].participants = [...newParticipants]
+        // Notify all participants there was a user who left
+        socket.broadcast.to(room).emit('user-left', user)
       })
     })
   }
