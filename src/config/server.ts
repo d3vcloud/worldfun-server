@@ -62,6 +62,14 @@ class ServerRealtime {
         this.rooms[room].participants = [...newParticipants]
         // Notify all participants there was a user who left
         socket.broadcast.to(room).emit('participantLeft', user)
+        // If there are no participants left, delete the room
+        const remainingParticipants = this.rooms[room].participants.length
+        if (remainingParticipants === 0) {
+          // TODO: Look for a better way to delete the room
+          delete this.rooms[room]
+        }
+
+        console.log(this.rooms)
       })
     })
   }
