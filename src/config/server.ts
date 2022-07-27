@@ -68,8 +68,6 @@ class ServerRealtime {
           // TODO: Look for a better way to delete the room
           delete this.rooms[room]
         }
-
-        console.log(this.rooms)
       })
     })
   }
